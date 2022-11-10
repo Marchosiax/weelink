@@ -14,13 +14,12 @@ public class Link {
     @ManyToOne
     @JoinColumn(name = "space_id")
     private Space space;
-    @OneToOne
-    @JoinColumn(name = "auth_id")
-    private LinkAuthentication linkAuthentication;
     @Column(columnDefinition = "TEXT", nullable = false, unique = true)
     private String alias;
     @Column(columnDefinition = "TEXT", nullable = false)
     private String origin;
+    @Column(columnDefinition = "TEXT")
+    private String password;
     private LocalDateTime expirationTime;
     private LocalDateTime availabilityTime;
     @Enumerated(EnumType.STRING)
@@ -35,17 +34,17 @@ public class Link {
 
     public Link(
             Space space,
-            LinkAuthentication linkAuthentication,
             String alias,
             String origin,
+            String password,
             LocalDateTime expirationTime,
             LocalDateTime availabilityTime,
             LinkType type
     ) {
         this.space = space;
-        this.linkAuthentication = linkAuthentication;
         this.alias = alias;
         this.origin = origin;
+        this.password = password;
         this.expirationTime = expirationTime;
         this.availabilityTime = availabilityTime;
         this.type = type;
@@ -55,7 +54,7 @@ public class Link {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -65,14 +64,6 @@ public class Link {
 
     public void setSpace(Space space) {
         this.space = space;
-    }
-
-    public LinkAuthentication getLinkAuthentication() {
-        return linkAuthentication;
-    }
-
-    public void setLinkAuthentication(LinkAuthentication linkAuthentication) {
-        this.linkAuthentication = linkAuthentication;
     }
 
     public String getAlias() {
@@ -89,6 +80,14 @@ public class Link {
 
     public void setOrigin(String origin) {
         this.origin = origin;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public LocalDateTime getExpirationTime() {

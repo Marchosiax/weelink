@@ -13,4 +13,6 @@ public interface SpaceRepository extends JpaRepository<Space, Long> {
     @Query("SELECT t FROM space t WHERE label = 'default'")
     Optional<Space> getDefault();
 
+    Optional<Space> findByLabel(String label);
+
 }

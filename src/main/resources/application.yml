@@ -22,3 +22,5 @@ app:
   link:
     domain: ${DOMAIN}
     alias-length: ${ALIAS_LENGTH}
+  error:
+    locale: en
