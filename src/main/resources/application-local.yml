@@ -1,0 +1,12 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5433/weelink
+    username: root
+    password: root
+  jpa:
+    hibernate:
+      ddl-auto: update
+app:
+  link:
+    domain: https://weel.ink
+    alias-length: 5

@@ -1,0 +1,24 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: weelink
+  datasource:
+    url: jdbc:postgresql://postgres-weelink/weelink
+    username: ${DB_USER}
+    password: ${DB_PASS}
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+        jdbc:
+          lob:
+            non_contextual_creation: true
+app:
+  link:
+    domain: ${DOMAIN}
+    alias-length: ${ALIAS_LENGTH}

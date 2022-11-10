@@ -1,4 +1,4 @@
-package com.marchosiax.weelink.model;
+package com.marchosiax.weelink.model.enums;
 
 public enum LinkType {
     PLAIN,
