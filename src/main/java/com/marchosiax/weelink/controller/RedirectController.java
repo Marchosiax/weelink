@@ -18,7 +18,7 @@ public class RedirectController {
 
     @GetMapping("/{alias}")
     public void redirect(HttpServletResponse response, @PathVariable String alias) throws Throwable {
-        var origin = linkService.getOriginLink(alias, null);
+        var origin = linkService.getRedirect(alias, null);
         response.sendRedirect(origin);
     }
 

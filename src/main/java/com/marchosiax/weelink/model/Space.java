@@ -1,5 +1,7 @@
 package com.marchosiax.weelink.model;
 
+import org.springframework.lang.NonNull;
+
 import javax.persistence.*;
 
 @Entity
@@ -27,6 +29,7 @@ public class Space {
         this.id = id;
     }
 
+    @NonNull
     public String getLabel() {
         return label;
     }

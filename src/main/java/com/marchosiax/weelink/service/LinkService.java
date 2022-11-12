@@ -1,5 +1,6 @@
 package com.marchosiax.weelink.service;
 
+import com.marchosiax.weelink.components.DTOMapper;
 import com.marchosiax.weelink.dto.LinkData;
 import com.marchosiax.weelink.error.AppError;
 import com.marchosiax.weelink.model.Link;
@@ -10,6 +11,7 @@ import com.marchosiax.weelink.repository.SpaceRepository;
 import com.marchosiax.weelink.utils.AliasGenerator;
 import com.marchosiax.weelink.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -19,15 +21,15 @@ public class LinkService {
 
     private final LinkRepository linkRepository;
     private final SpaceRepository spaceRepository;
+    private final DTOMapper dtoMapper;
 
-    @Value("${app.link.domain}")
-    private String domain;
     @Value("${app.link.alias-length}")
     private int aliasLength;
 
-    public LinkService(LinkRepository linkRepository, SpaceRepository spaceRepository) {
+    public LinkService(LinkRepository linkRepository, SpaceRepository spaceRepository, DTOMapper dtoMapper) {
         this.linkRepository = linkRepository;
         this.spaceRepository = spaceRepository;
+        this.dtoMapper = dtoMapper;
     }
 
     public LinkData create(
@@ -61,29 +63,18 @@ public class LinkService {
 
         var linkEntity = switch (linkType) {
             case PLAIN -> storePlainLink(finalAlias, origin, spaceEntity, expiration, availability);
-            case PASSWORD_PROTECTED ->
-                    storePasswordProtectedLink(finalAlias, origin, spaceEntity, password, expiration, availability);
+            case PASSWORD_PROTECTED -> storePasswordProtectedLink(finalAlias, origin, spaceEntity, password, expiration, availability);
         };
 
-        String fullLink;
-        if (space == null)
-            fullLink = domain + "/" + finalAlias;
-        else
-            fullLink = domain + "/" + space + "/" + finalAlias;
-
-        return new LinkData(
-                linkEntity.getUuid(),
-                fullLink,
-                fullLink.replace("https://", "").replace("http://", ""),
-                space,
-                origin,
-                expiration,
-                availability,
-                linkType
-        );
+        return dtoMapper.linkAsLinkData(linkEntity);
     }
 
-    public String getOriginLink(String alias, String password) throws Throwable {
+    public LinkData getLinkData(String alias) throws Throwable {
+        var link = linkRepository.findByAlias(alias).orElseThrow(AppError.LINK_NOT_FOUND::exception);
+        return dtoMapper.linkAsLinkData(link);
+    }
+
+    public String getRedirect(String alias, String password) throws Throwable {
         var link = linkRepository.findByAlias(alias)
                 .orElseThrow(AppError.ALIAS_ALREADY_TAKEN::exception);
 
