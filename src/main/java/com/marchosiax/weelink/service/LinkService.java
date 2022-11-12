@@ -1,6 +1,6 @@
 package com.marchosiax.weelink.service;
 
-import com.marchosiax.weelink.data.LinkData;
+import com.marchosiax.weelink.dto.LinkData;
 import com.marchosiax.weelink.error.AppError;
 import com.marchosiax.weelink.model.Link;
 import com.marchosiax.weelink.model.Space;
@@ -30,13 +30,15 @@ public class LinkService {
         this.spaceRepository = spaceRepository;
     }
 
-    public LinkData create(String alias,
-                           String origin,
-                           String space,
-                           String password,
-                           LocalDateTime expiration,
-                           LocalDateTime availability,
-                           LinkType linkType) throws Throwable {
+    public LinkData create(
+            String alias,
+            String origin,
+            String space,
+            String password,
+            LocalDateTime expiration,
+            LocalDateTime availability,
+            LinkType linkType
+    ) throws Throwable {
         //TODO validate origin
         var finalAlias = alias;
         if (finalAlias == null || finalAlias.isBlank() || finalAlias.isEmpty()) {
@@ -54,16 +56,14 @@ public class LinkService {
             spaceEntity = spaceRepository.findByLabel(space).orElseThrow(AppError.SPACE_NOT_FOUND::exception);
 
         var now = LocalDateTime.now();
-        if (expiration.isBefore(now))
+        if (expiration != null && expiration.isBefore(now))
             throw AppError.INVALID_DATE.exception();
 
-        if (linkType == LinkType.PASSWORD_PROTECTED && (password == null || password.isEmpty()))
-            throw AppError.PASSWORD_NOT_DEFINED.exception();
-
-        var hashedPassword = SecurityUtils.hashSHA256(password);
-        var linkEntity = linkRepository.save(
-                new Link(spaceEntity, finalAlias, origin, hashedPassword, expiration, availability, linkType)
-        );
+        var linkEntity = switch (linkType) {
+            case PLAIN -> storePlainLink(finalAlias, origin, spaceEntity, expiration, availability);
+            case PASSWORD_PROTECTED ->
+                    storePasswordProtectedLink(finalAlias, origin, spaceEntity, password, expiration, availability);
+        };
 
         String fullLink;
         if (space == null)
@@ -80,6 +80,52 @@ public class LinkService {
                 expiration,
                 availability,
                 linkType
+        );
+    }
+
+    public String getOriginLink(String alias, String password) throws Throwable {
+        var link = linkRepository.findByAlias(alias)
+                .orElseThrow(AppError.ALIAS_ALREADY_TAKEN::exception);
+
+        if (link.getType() == LinkType.PASSWORD_PROTECTED) {
+            if (password == null || password.isEmpty())
+                throw AppError.INCORRECT_LINK_PASSWORD.exception();
+
+            var hashedPassword = SecurityUtils.hashSHA256(password);
+            if (!hashedPassword.equals(password))
+                throw AppError.INCORRECT_LINK_PASSWORD.exception();
+        }
+
+        return link.getOrigin();
+    }
+
+    private Link storePlainLink(
+            String alias,
+            String origin,
+            Space space,
+            LocalDateTime expiration,
+            LocalDateTime availability
+    ) {
+        return linkRepository.save(
+                new Link(space, alias, origin, null, expiration, availability, LinkType.PLAIN)
+        );
+    }
+
+    private Link storePasswordProtectedLink(
+            String alias,
+            String origin,
+            Space space,
+            String password,
+            LocalDateTime expiration,
+            LocalDateTime availability
+    ) throws Throwable {
+        if (password == null || password.isEmpty())
+            throw AppError.PASSWORD_NOT_DEFINED.exception();
+
+        var hashedPassword = SecurityUtils.hashSHA256(password);
+        //var encryptedOrigin = SecurityUtils.encryptAES(origin, password);
+        return linkRepository.save(
+                new Link(space, alias, origin, hashedPassword, expiration, availability, LinkType.PASSWORD_PROTECTED)
         );
     }
 

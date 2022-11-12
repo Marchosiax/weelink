@@ -10,7 +10,7 @@ import java.util.Optional;
 @Repository
 public interface SpaceRepository extends JpaRepository<Space, Long> {
 
-    @Query("SELECT t FROM space t WHERE label = 'default'")
+    @Query("SELECT t FROM Space t WHERE t.label = 'default'")
     Optional<Space> getDefault();
 
     Optional<Space> findByLabel(String label);

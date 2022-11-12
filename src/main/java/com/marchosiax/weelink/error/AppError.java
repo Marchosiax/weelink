@@ -13,7 +13,9 @@ public enum AppError {
     ALIAS_ALREADY_TAKEN(2001, HttpStatus.BAD_REQUEST),
     SPACE_NOT_FOUND(2002, HttpStatus.NOT_FOUND),
     INVALID_DATE(2003, HttpStatus.BAD_REQUEST),
-    PASSWORD_NOT_DEFINED(2004, HttpStatus.BAD_REQUEST);
+    PASSWORD_NOT_DEFINED(2004, HttpStatus.BAD_REQUEST),
+    LINK_NOT_FOUND(2005, HttpStatus.NOT_FOUND),
+    INCORRECT_LINK_PASSWORD(2006, HttpStatus.FORBIDDEN);
 
     private int code;
     private HttpStatus status;

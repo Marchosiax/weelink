@@ -4,6 +4,7 @@ import com.marchosiax.weelink.model.enums.LinkType;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 public class Link {
@@ -48,6 +49,7 @@ public class Link {
         this.expirationTime = expirationTime;
         this.availabilityTime = availabilityTime;
         this.type = type;
+        this.uuid = UUID.randomUUID().toString();
     }
 
     public long getId() {
