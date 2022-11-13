@@ -11,7 +11,6 @@ public record CreateLinkBody(
         @NonNull
         @URL
         String origin,
-        String space,
         String password,
         LocalDateTime expirationTime,
         LocalDateTime availabilityTime,

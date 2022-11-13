@@ -10,7 +10,6 @@ public record LinkData(
         String id,
         String fullLink,
         String briefLink,
-        String space,
         String origin,
         LocalDateTime expirationTime,
         LocalDateTime availabilityTime,

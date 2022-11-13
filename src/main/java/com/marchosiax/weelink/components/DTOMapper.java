@@ -13,18 +13,12 @@ public class DTOMapper {
 
     public LinkData linkAsLinkData(Link link){
         var alias = link.getAlias();
-        var spaceLabel = link.getSpace().getLabel();
-        String fullLink;
-        if (spaceLabel.equals("default"))
-            fullLink = domain + "/" + alias;
-        else
-            fullLink = domain + "/" + spaceLabel + "/" + alias;
+        String fullLink = domain + "/" + alias;
 
         return new LinkData(
                 link.getUuid(),
                 fullLink,
                 fullLink.replace("https://", "").replace("http://", ""),
-                spaceLabel,
                 link.getOrigin(),
                 link.getExpirationTime(),
                 link.getAvailabilityTime(),

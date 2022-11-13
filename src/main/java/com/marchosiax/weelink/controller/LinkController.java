@@ -24,7 +24,6 @@ public class LinkController {
         return linkService.create(
                 body.alias(),
                 body.origin(),
-                body.space(),
                 body.password(),
                 body.expirationTime(),
                 body.availabilityTime(),

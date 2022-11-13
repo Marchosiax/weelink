@@ -12,9 +12,6 @@ public class Link {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    @ManyToOne
-    @JoinColumn(name = "space_id")
-    private Space space;
     @Column(columnDefinition = "TEXT", nullable = false, unique = true)
     private String alias;
     @Column(columnDefinition = "TEXT", nullable = false)
@@ -34,7 +31,6 @@ public class Link {
     }
 
     public Link(
-            Space space,
             String alias,
             String origin,
             String password,
@@ -42,7 +38,6 @@ public class Link {
             LocalDateTime availabilityTime,
             LinkType type
     ) {
-        this.space = space;
         this.alias = alias;
         this.origin = origin;
         this.password = password;
@@ -58,14 +53,6 @@ public class Link {
 
     public void setId(long id) {
         this.id = id;
-    }
-
-    public Space getSpace() {
-        return space;
-    }
-
-    public void setSpace(Space space) {
-        this.space = space;
     }
 
     public String getAlias() {
