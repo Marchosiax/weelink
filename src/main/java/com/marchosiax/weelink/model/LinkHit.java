@@ -35,11 +35,32 @@ public class LinkHit {
 
     }
 
-    public LinkHit(Link link, LocalDate date, String ip, String sourceDomain) {
+    public LinkHit(Link link, String ip) {
+        this.link = link;
+        this.ip = ip;
+        this.date = LocalDate.now();
+    }
+
+    public LinkHit(Link link, String ip, String sourceDomain, DeviceType deviceType, OS os, Browser browser, String country) {
+        this.link = link;
+        this.date = LocalDate.now();
+        this.ip = ip;
+        this.sourceDomain = sourceDomain;
+        this.deviceType = deviceType;
+        this.os = os;
+        this.browser = browser;
+        this.country = country;
+    }
+
+    public LinkHit(Link link, LocalDate date, String ip, String sourceDomain, DeviceType deviceType, OS os, Browser browser, String country) {
         this.link = link;
         this.date = date;
         this.ip = ip;
         this.sourceDomain = sourceDomain;
+        this.deviceType = deviceType;
+        this.os = os;
+        this.browser = browser;
+        this.country = country;
     }
 
     public long getId() {
