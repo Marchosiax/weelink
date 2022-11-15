@@ -1,11 +1,7 @@
 package com.marchosiax.weelink.model;
 
-import com.marchosiax.weelink.model.enums.Browser;
-import com.marchosiax.weelink.model.enums.DeviceType;
-import com.marchosiax.weelink.model.enums.OS;
-
 import javax.persistence.*;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 public class LinkHit {
@@ -16,20 +12,18 @@ public class LinkHit {
     @ManyToOne
     @JoinColumn(name = "link_id")
     private Link link;
-    @Column(nullable = false, unique = true)
-    private LocalDate date;
+    @Column(nullable = false)
+    private LocalDateTime date;
     @Column(columnDefinition = "VARCHAR(40)", nullable = false)
     private String ip;
     @Column(columnDefinition = "TEXT")
-    private String sourceDomain;
-    @Column(columnDefinition = "VARCHAR(20)")
-    private DeviceType deviceType;
-    @Column(columnDefinition = "VARCHAR(20)")
-    private OS os;
-    @Column(columnDefinition = "VARCHAR(20)")
-    private Browser browser;
-    @Column(columnDefinition = "VARCHAR(50)")
-    private String country;
+    private String host;
+    @Column(columnDefinition = "VARCHAR(100)")
+    private String deviceType;
+    @Column(columnDefinition = "VARCHAR(100)")
+    private String os;
+    @Column(columnDefinition = "VARCHAR(100)")
+    private String browser;
 
     public LinkHit() {
 
@@ -38,29 +32,27 @@ public class LinkHit {
     public LinkHit(Link link, String ip) {
         this.link = link;
         this.ip = ip;
-        this.date = LocalDate.now();
+        this.date = LocalDateTime.now();
     }
 
-    public LinkHit(Link link, String ip, String sourceDomain, DeviceType deviceType, OS os, Browser browser, String country) {
+    public LinkHit(Link link, String ip, String host, String deviceType, String os, String browser) {
         this.link = link;
-        this.date = LocalDate.now();
+        this.date = LocalDateTime.now();
         this.ip = ip;
-        this.sourceDomain = sourceDomain;
+        this.host = host;
         this.deviceType = deviceType;
         this.os = os;
         this.browser = browser;
-        this.country = country;
     }
 
-    public LinkHit(Link link, LocalDate date, String ip, String sourceDomain, DeviceType deviceType, OS os, Browser browser, String country) {
+    public LinkHit(Link link, LocalDateTime date, String ip, String host, String deviceType, String os, String browser) {
         this.link = link;
         this.date = date;
         this.ip = ip;
-        this.sourceDomain = sourceDomain;
+        this.host = host;
         this.deviceType = deviceType;
         this.os = os;
         this.browser = browser;
-        this.country = country;
     }
 
     public long getId() {
@@ -79,11 +71,11 @@ public class LinkHit {
         this.link = link;
     }
 
-    public LocalDate getDate() {
+    public LocalDateTime getDate() {
         return date;
     }
 
-    public void setDate(LocalDate date) {
+    public void setDate(LocalDateTime date) {
         this.date = date;
     }
 
@@ -95,43 +87,35 @@ public class LinkHit {
         this.ip = ip;
     }
 
-    public String getSourceDomain() {
-        return sourceDomain;
+    public String getHost() {
+        return host;
     }
 
-    public void setSourceDomain(String sourceDomain) {
-        this.sourceDomain = sourceDomain;
+    public void setHost(String sourceDomain) {
+        this.host = host;
     }
 
-    public DeviceType getDeviceType() {
+    public String getDeviceType() {
         return deviceType;
     }
 
-    public void setDeviceType(DeviceType deviceType) {
+    public void setDeviceType(String deviceType) {
         this.deviceType = deviceType;
     }
 
-    public OS getOs() {
+    public String getOs() {
         return os;
     }
 
-    public void setOs(OS os) {
+    public void setOs(String os) {
         this.os = os;
     }
 
-    public Browser getBrowser() {
+    public String getBrowser() {
         return browser;
     }
 
-    public void setBrowser(Browser browser) {
+    public void setBrowser(String browser) {
         this.browser = browser;
-    }
-
-    public String getCountry() {
-        return country;
-    }
-
-    public void setCountry(String country) {
-        this.country = country;
     }
 }

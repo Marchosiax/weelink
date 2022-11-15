@@ -50,7 +50,8 @@ public class LinkService {
 
         var linkEntity = switch (linkType) {
             case PLAIN -> storePlainLink(finalAlias, origin, expiration, availability);
-            case PASSWORD_PROTECTED -> storePasswordProtectedLink(finalAlias, origin, password, expiration, availability);
+            case PASSWORD_PROTECTED ->
+                    storePasswordProtectedLink(finalAlias, origin, password, expiration, availability);
         };
 
         return dtoMapper.linkAsLinkData(linkEntity);
@@ -58,6 +59,22 @@ public class LinkService {
 
     public LinkData getLinkData(String alias) throws Throwable {
         var link = linkRepository.findByAlias(alias).orElseThrow(AppError.LINK_NOT_FOUND::exception);
+        return dtoMapper.linkAsLinkData(link);
+    }
+
+    public LinkData openLink(String alias, String password) throws Throwable {
+        Link link = linkRepository.findByAlias(alias)
+                .orElseThrow(AppError.LINK_NOT_FOUND::exception);
+
+        if (link.getType() == LinkType.PASSWORD_PROTECTED) {
+            if (password == null || password.isEmpty())
+                throw AppError.INCORRECT_LINK_PASSWORD.exception();
+
+            var hashedPassword = SecurityUtils.hashSHA256(password);
+            if (!hashedPassword.equals(password))
+                throw AppError.INCORRECT_LINK_PASSWORD.exception();
+        }
+
         return dtoMapper.linkAsLinkData(link);
     }
 
