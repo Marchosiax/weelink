@@ -41,7 +41,7 @@ public class LinkStatService {
         );
     }
 
-    private static record CallerProps(String deviceType, String os, String browser) {
+    private record CallerProps(String deviceType, String os, String browser) {
     }
 
 }

@@ -1,11 +1,11 @@
-FROM maven:3.6.0-jdk-11-slim AS build
-COPY ekyc-service/src /home/app/src
-COPY ekyc-service/pom.xml /home/app
+FROM maven:3.8.5-openjdk-17 AS build
+COPY /src /home/app/src
+COPY /pom.xml /home/app
 COPY pom.xml /home
 COPY .env /home/app/src
 RUN --mount=type=cache,target=/root/.m2 mvn -f /home/app/pom.xml clean install -Dmaven.test.skip
 
-FROM openjdk:11
+FROM openjdk:17
 ARG JAR_FILE=/home/app/target/*.jar
 COPY --from=build ${JAR_FILE} app.jar
 ENTRYPOINT ["sh", "-c", "java ${JAVA_OPTS} -jar /app.jar"]

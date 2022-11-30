@@ -1,6 +1,6 @@
 version: '3.8'
 services:
-  postgres-kyc-service:
+  postgres-weelink:
     image: postgres:14-alpine
     ports:
       - "5432:5432"
@@ -15,5 +15,27 @@ services:
     deploy:
       restart_policy:
         condition: on-failure
+    env_file:
+      - .env
+  weelink:
+    build:
+      context: .
+    ports:
+      - "8080:11223"
+    environment:
+      - DOMAIN=${DOMAIN}
+      - ALIAS_LENGTH=${ALIAS_LENGTH}
+    networks:
+      - default
+    depends_on:
+      -   postgres-weelink
+    deploy:
+      restart_policy:
+        condition: on-failure
+    env_file:
+      - .env
 volumes:
   weelink-data:
+networks:
+  default:
+    driver: bridge
