@@ -1,9 +1,7 @@
 # Weelink
-___
 Lightweight self-hosted link shortener based on Java
 
 ## Install
-___
 Clone the repository
 ```shell
 git clone git@github.com:Marchosiax/weelink.git && cd weelink
@@ -29,7 +27,6 @@ And finally run the project
 docker compose up -d
 ```
 ## License
-___
 ```
 MIT License
 
